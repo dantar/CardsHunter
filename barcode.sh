@@ -6,3 +6,4 @@ npm i -s @ionic-native/barcode-scanner@4.20.0
 
 # ionic.config.json: angular
 # npm i -s @ionic-native/barcode-scanner@5.0.0-beta.24
+ionic cordova plugin add phonegap-plugin-barcodescanner
