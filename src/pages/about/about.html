@@ -8,4 +8,13 @@
 
 <ion-content padding>
 
+  <p>Total items: {{state.items.length}}</p>
+  <p *ngFor="let item of state.items">Item {{item.name}}</p>
+
+  <p>
+    <button ion-button color="primary" (click)="doOne($event)">One item</button>
+    <button ion-button color="primary" (click)="doTwo($event)">Two items</button>
+  </p>
+
+
 </ion-content>
