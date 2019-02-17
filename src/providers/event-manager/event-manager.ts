@@ -28,6 +28,13 @@ export class EventManagerProvider {
           new HcMessage('You got the sword!'),
         ]),
       },
+      {
+        trigger: new HtWithItem('sword', 'rock'),
+        effect: new HcMany([
+          new HcDropItem('sword'),
+          new HcMessage('You broke the sword!'),
+        ]),
+      },
     ];
   }
 
@@ -106,7 +113,7 @@ export class HtClickItem extends HuntTrigger {
     this.item = item;
   }
   check(state: HuntState, event: HuntEvent): boolean {
-    return event.code === 'one';
+    return event.code === 'one' && (<HeOneItem> event).item === this.item;
   }
 }
 
@@ -120,7 +127,11 @@ export class HtWithItem extends HuntTrigger {
     this.second = second;
   }
   check(state: HuntState, event: HuntEvent): boolean {
-    return event.code === 'two';
+    if (event.code !== 'two') {
+      return false;
+    }
+    const two: HeTwoItems = <HeTwoItems> event;
+    return (two.first === this.first && two.second === this.second) || (two.second === this.first && two.first === this.second);
   }
 }
 

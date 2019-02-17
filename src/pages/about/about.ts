@@ -9,6 +9,9 @@ import { NavController } from 'ionic-angular';
 })
 export class AboutPage {
 
+  nameOne: string;
+  nameTwo: string;
+
   constructor(public navCtrl: NavController,
     private eventManager: EventManagerProvider,
     private shared: SharedStateProvider) {
@@ -16,11 +19,11 @@ export class AboutPage {
     }
 
   doOne(event) {
-    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeOneItem('sword')));
+    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeOneItem(this.nameOne)));
   }
 
   doTwo(event) {
-    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeTwoItems('sword', 'rock')));
+    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeTwoItems(this.nameOne, this.nameTwo)));
   }
 
   readOk(event) {

@@ -14,7 +14,12 @@
   </ion-list>
 
   <p>
+    <ion-input [(ngModel)]="nameOne"></ion-input>
     <button ion-button color="primary" (click)="doOne($event)">One item</button>
+  </p>
+
+  <p>
+    <ion-input [(ngModel)]="nameTwo"></ion-input>
     <button ion-button color="primary" (click)="doTwo($event)">Two items</button>
   </p>
 
