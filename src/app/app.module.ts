@@ -13,6 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { EventManagerProvider } from '../providers/event-manager/event-manager';
+import { SharedStateProvider } from '../providers/shared-state/shared-state';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { EventManagerProvider } from '../providers/event-manager/event-manager';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BarcodeScanner,
     EventManagerProvider,
+    SharedStateProvider,
   ]
 })
 export class AppModule {}

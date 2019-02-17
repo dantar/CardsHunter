@@ -37,10 +37,25 @@ export class EventManagerProvider {
     return state;
   }
 
+  readMessages(state: HuntState): HuntState {
+    state.messages.forEach(message => state.log.push(message));
+    state.messages = [];
+    return state;
+  }
+
 }
 
 export class HuntState {
   items: HuntItem[] = [];
+  messages: HuntMessage[] = [];
+  log: HuntMessage[] = [];
+}
+
+export class HuntMessage {
+  text: string;
+  constructor(text: string) {
+    this.text = text;
+  }
 }
 
 export class HuntRules {
@@ -140,6 +155,19 @@ export class HcDropItem extends HuntConsequence {
   }
   fire(state: HuntState): HuntState {
     state.items =  state.items.filter(item => item.name !== this.item);
+    return state;
+  }
+}
+
+export class HcMessage extends HuntConsequence {
+  code: string = 'message';
+  text: string;
+  constructor(text: string) {
+    super();
+    this.text = text;
+  }
+  fire(state: HuntState): HuntState {
+    state.messages.push(new HuntMessage(this.text));
     return state;
   }
 }

@@ -1,5 +1,6 @@
+import { SharedStateProvider } from './../../providers/shared-state/shared-state';
 import { EventManagerProvider, HuntEvent, HuntState, HeStart, HeOneItem, HeTwoItems } from './../../providers/event-manager/event-manager';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
@@ -8,20 +9,19 @@ import { NavController } from 'ionic-angular';
 })
 export class AboutPage {
 
-  state: HuntState;
-
-  constructor(public navCtrl: NavController, private eventManager: EventManagerProvider) {
-    this.state = new HuntState();
-    const event = new HeStart();
-    this.state = this.eventManager.handleEvent(this.state, event);
-  }
+  constructor(public navCtrl: NavController,
+    private eventManager: EventManagerProvider,
+    private sharedState: SharedStateProvider) {
+      this.sharedState.init();
+      this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeStart()));
+    }
 
   doOne(event) {
-    this.state = this.eventManager.handleEvent(this.state, new HeOneItem('sword'));
+    this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeOneItem('sword')));
   }
 
   doTwo(event) {
-    this.state = this.eventManager.handleEvent(this.state, new HeTwoItems('sword', 'rock'));
+    this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeTwoItems('sword', 'rock')));
   }
 
 }
