@@ -23,11 +23,10 @@ export class EventManagerProvider {
       },
       {
         trigger: new HtClickItem('sword'),
-        effect: new HcGainItem('sword'),
-      },
-      {
-        trigger: new HtClickItem('sword'),
-        effect: new HcMessage('You got the sword!'),
+        effect: new HcMany([
+          new HcGainItem('sword'),
+          new HcMessage('You got the sword!'),
+        ]),
       },
     ];
   }
@@ -172,6 +171,21 @@ export class HcMessage extends HuntConsequence {
   }
   fire(state: HuntState): HuntState {
     state.messages.push(new HuntMessage(this.text));
+    return state;
+  }
+}
+
+export class HcMany extends HuntConsequence {
+  code: string = 'many';
+  list: HuntConsequence[];
+  constructor(list: HuntConsequence[]) {
+    super();
+    this.list = list;
+  }
+  fire(state: HuntState): HuntState {
+    this.list.forEach(hc => {
+      hc.fire(state);
+    });
     return state;
   }
 }
