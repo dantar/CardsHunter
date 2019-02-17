@@ -12,7 +12,6 @@ export class AboutPage {
   constructor(public navCtrl: NavController,
     private eventManager: EventManagerProvider,
     private shared: SharedStateProvider) {
-      this.shared.init();
       this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
     }
 

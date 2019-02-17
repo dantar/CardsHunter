@@ -15,10 +15,10 @@ export class SharedStateProvider {
 
   constructor() {
     console.log('Hello SharedStateProvider Provider');
+    this.state = new HuntState();
   }
 
   init() {
-    this.state = new HuntState();
   }
 
   updateState(state: HuntState) {

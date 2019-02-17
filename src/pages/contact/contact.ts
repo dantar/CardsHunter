@@ -1,3 +1,4 @@
+import { SharedStateProvider } from './../../providers/shared-state/shared-state';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
@@ -7,7 +8,7 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private shared: SharedStateProvider) {
 
   }
 

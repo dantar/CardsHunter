@@ -8,8 +8,10 @@
 
 <ion-content padding *ngIf="shared.state.messages.length === 0">
 
-  <p>Total items: {{shared.state.items.length}}</p>
-  <p *ngFor="let item of shared.state.items">Item {{item.name}}</p>
+  <ion-list>
+    <ion-list-header>Items ({{shared.state.items.length}})</ion-list-header>
+    <ion-item *ngFor="let item of shared.state.items">{{item.name}}</ion-item>
+  </ion-list>
 
   <p>
     <button ion-button color="primary" (click)="doOne($event)">One item</button>
