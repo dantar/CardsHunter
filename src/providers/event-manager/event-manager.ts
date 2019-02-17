@@ -19,7 +19,7 @@ export class EventManagerProvider {
     this.rules = [
       {
         trigger: new HtInitGame(),
-        effect: new HcGainItem('sword'),
+        effect: new HcGainItem('shield'),
       },
       {
         trigger: new HtClickItem('sword'),
@@ -110,8 +110,8 @@ export class HtWithItem extends HuntTrigger {
 
 export class HuntConsequence extends TypedBase {
   type: string = 'consequence';
-  fire(state: HuntState) {
-    // pass
+  fire(state: HuntState): HuntState {
+    return state;
   }
 }
 
@@ -122,8 +122,12 @@ export class HcGainItem extends HuntConsequence {
     super();
     this.item = item;
   }
-  fire(state: HuntState) {
-    state.items.push(new HuntItem(this.item));
+  fire(state: HuntState): HuntState {
+    const found =  state.items.filter(item => item.name === this.item);
+    if (found.length === 0) {
+      state.items.push(new HuntItem(this.item));
+    };
+    return state;
   }
 }
 
@@ -134,8 +138,9 @@ export class HcDropItem extends HuntConsequence {
     super();
     this.item = item;
   }
-  fire(state: HuntState) {
-    state.items.push(new HuntItem(this.item));
+  fire(state: HuntState): HuntState {
+    state.items =  state.items.filter(item => item.name !== this.item);
+    return state;
   }
 }
 
