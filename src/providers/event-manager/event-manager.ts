@@ -25,6 +25,10 @@ export class EventManagerProvider {
         trigger: new HtClickItem('sword'),
         effect: new HcGainItem('sword'),
       },
+      {
+        trigger: new HtClickItem('sword'),
+        effect: new HcMessage('You got the sword!'),
+      },
     ];
   }
 

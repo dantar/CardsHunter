@@ -11,17 +11,21 @@ export class AboutPage {
 
   constructor(public navCtrl: NavController,
     private eventManager: EventManagerProvider,
-    private sharedState: SharedStateProvider) {
-      this.sharedState.init();
-      this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeStart()));
+    private shared: SharedStateProvider) {
+      this.shared.init();
+      this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
     }
 
   doOne(event) {
-    this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeOneItem('sword')));
+    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeOneItem('sword')));
   }
 
   doTwo(event) {
-    this.sharedState.updateState(this.eventManager.handleEvent(this.sharedState.state, new HeTwoItems('sword', 'rock')));
+    this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeTwoItems('sword', 'rock')));
+  }
+
+  readOk(event) {
+    this.shared.updateState(this.eventManager.readMessages(this.shared.state));
   }
 
 }

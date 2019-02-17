@@ -6,15 +6,22 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding *ngIf="shared.state.messages.length === 0">
 
-  <p>Total items: {{sharedState.state.items.length}}</p>
-  <p *ngFor="let item of sharedState.state.items">Item {{item.name}}</p>
+  <p>Total items: {{shared.state.items.length}}</p>
+  <p *ngFor="let item of shared.state.items">Item {{item.name}}</p>
 
   <p>
     <button ion-button color="primary" (click)="doOne($event)">One item</button>
     <button ion-button color="primary" (click)="doTwo($event)">Two items</button>
   </p>
 
+</ion-content>
 
+<ion-content padding *ngIf="shared.state.messages.length > 0">
+  <p>There are {{shared.state.messages.length}} messages!</p>
+  <p *ngFor="let message of shared.state.messages ">{{message.text}}</p>
+  <p>
+    <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
+  </p>
 </ion-content>
