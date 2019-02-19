@@ -1,6 +1,6 @@
 import { HuntState } from './../event-manager/event-manager';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the SharedStateProvider provider.
@@ -13,9 +13,14 @@ export class SharedStateProvider {
 
   state: HuntState;
 
-  constructor() {
+  constructor(private storage: Storage) {
     console.log('Hello SharedStateProvider Provider');
     this.state = new HuntState();
+    this.storage.get('savegame').then((state) => {
+      if (state !== null) {
+        this.state = state;
+      }
+    });
   }
 
   init() {
@@ -23,6 +28,7 @@ export class SharedStateProvider {
 
   updateState(state: HuntState) {
     this.state = state;
+    this.storage.set('savegame', this.state);
   }
 
 }
