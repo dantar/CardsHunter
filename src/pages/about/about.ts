@@ -1,7 +1,8 @@
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
 import { EventManagerProvider, HuntEvent, HuntState, HeStart, HeOneItem, HeTwoItems } from './../../providers/event-manager/event-manager';
 import { Component, Input } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 
 @Component({
   selector: 'page-about',
@@ -14,8 +15,10 @@ export class AboutPage {
 
   constructor(public navCtrl: NavController,
     private eventManager: EventManagerProvider,
-    private shared: SharedStateProvider) {
-      this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
+    private shared: SharedStateProvider,
+    private scanner: BarcodeScanner,
+    public platform: Platform) {
+        this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
     }
 
   doOne(event) {
@@ -28,6 +31,29 @@ export class AboutPage {
 
   readOk(event) {
     this.shared.updateState(this.eventManager.readMessages(this.shared.state));
+  }
+
+  scanOne(event) {
+    this.scanner.scan().then(
+      (barcode) => {
+        this.nameOne = barcode.text;
+        this.doOne(event);
+      }
+    );
+  }
+
+  scanTwo(event) {
+    this.scanner.scan().then(
+      (barcode) => {
+        this.nameOne = barcode.text;
+        this.scanner.scan().then(
+          (barcode) => {
+            this.nameTwo = barcode.text;
+            this.doTwo(event);
+          }
+        );
+      }
+    );
   }
 
 }

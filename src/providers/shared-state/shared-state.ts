@@ -31,4 +31,8 @@ export class SharedStateProvider {
     this.storage.set('savegame', this.state);
   }
 
+  resetState() {
+    this.updateState(new HuntState());
+  }
+
 }

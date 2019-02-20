@@ -19,7 +19,12 @@ export class EventManagerProvider {
     this.rules = [
       {
         trigger: new HtInitGame(),
-        effect: new HcGainItem('shield'),
+        effect: new HcMany([
+          new HcGainItem('shield'),
+          new HcMessage('Welcome to the game!'),
+          new HcMessage('This is another longer message. It is three sentences long. This is the last sentence.'),
+          new HcMessage('Good luck!'),
+        ]),
       },
       {
         trigger: new HtClickItem('sword'),
@@ -29,11 +34,15 @@ export class EventManagerProvider {
         ]),
       },
       {
-        trigger: new HtWithItem('sword', 'rock'),
+        trigger: new HtWithItem('bridge', 'orcs'),
         effect: new HcMany([
           new HcDropItem('sword'),
           new HcMessage('You broke the sword!'),
         ]),
+      },
+      {
+        trigger: new HtNoMessages(),
+        effect: new HcMessage('Nothing happens'),
       },
     ];
   }
@@ -132,6 +141,13 @@ export class HtWithItem extends HuntTrigger {
     }
     const two: HeTwoItems = <HeTwoItems> event;
     return (two.first === this.first && two.second === this.second) || (two.second === this.first && two.first === this.second);
+  }
+}
+
+export class HtNoMessages extends HuntTrigger {
+  code: string = 'nomsg';
+  check(state: HuntState, event: HuntEvent): boolean {
+    return (state.messages.length === 0);
   }
 }
 
