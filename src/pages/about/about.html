@@ -13,7 +13,7 @@
     <ion-item *ngFor="let item of shared.state.items">{{item.name}}</ion-item>
   </ion-list>
 
-  <ion-content *ngIf="! platform.is('cordova')">
+  <div *ngIf="! platform.is('cordova')">
     <p>
       <ion-input [(ngModel)]="nameOne"></ion-input>
       <button ion-button color="primary" (click)="doOne($event)">One item</button>
@@ -22,12 +22,12 @@
       <ion-input [(ngModel)]="nameTwo"></ion-input>
       <button ion-button color="primary" (click)="doTwo($event)">Two items</button>
     </p>
-  </ion-content>
+  </div>
 
-  <ion-content *ngIf="platform.is('cordova')">
+  <div *ngIf="platform.is('cordova')">
     <button ion-button color="primary" (click)="scanOne($event)">One item</button>
     <button ion-button color="primary" (click)="scanTwo($event)">Two item</button>
-  </ion-content>
+  </div>
 
 </ion-content>
 

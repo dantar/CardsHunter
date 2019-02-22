@@ -4,25 +4,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding *ngIf="platform.is('cordova')">
-  <h2>Welcome to Card Hunter!</h2>
-  <p>
-    Codice selezionato: {{scanned}}
-  </p>
-  <p>
-    <button ion-button color="primary" (click)="scancode($event)">Scan</button>
-  </p>
-</ion-content>
-
-<ion-content padding *ngIf="! platform.is('cordova')">
-  <h2>Welcome to Card Hunter! (test)</h2>
-  <p>
-    Codice selezionato: {{scanned}}
-  </p>
-</ion-content>
-
 <ion-content padding>
-  <p>
-    <button ion-button color="primary" (click)="reset($event)">Reset</button>
-  </p>
+  <h2>Welcome to Card Hunter!</h2>
+  <div *ngIf="platform.is('cordova')">
+    <p>
+      Codice selezionato: {{scanned}}
+    </p>
+    <p>
+      <button ion-button color="primary" (click)="scancode($event)">Scan</button>
+    </p>
+  </div>
+  <div *ngIf="! platform.is('cordova')">
+    <p>
+      <button ion-button color="primary" (click)="reset($event)">Reset</button>
+    </p>
+  </div>
 </ion-content>
