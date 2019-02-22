@@ -18,15 +18,20 @@ export class AboutPage {
     private shared: SharedStateProvider,
     private scanner: BarcodeScanner,
     public platform: Platform) {
-        this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
+      this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
+      this.nameOne = '';
+      this.nameTwo = '';
     }
 
   doOne(event) {
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeOneItem(this.nameOne)));
+    this.nameOne = '';
   }
 
   doTwo(event) {
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeTwoItems(this.nameOne, this.nameTwo)));
+    this.nameOne = '';
+    this.nameTwo = '';
   }
 
   readOk(event) {
