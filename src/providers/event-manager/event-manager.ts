@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /*
@@ -27,10 +26,10 @@ export class EventManagerProvider {
         ]),
       },
       {
-        trigger: new HtClickItem('buy'),
+        trigger: new HtClickItem('tree'),
         effect: new HcMany([
           new HcGainCountable('apple', 1),
-          new HcMessage('You bought one apple! Now you have #apple apples!'),
+          new HcMessage('You pick one apple from the tree! Now you have #apple apples!'),
         ]),
       },
       {
@@ -72,7 +71,8 @@ export class EventManagerProvider {
 }
 
 export class HuntState {
-  items: HuntItem[] = [];
+  tags: string[] = [];
+  items: {[item: string]: HuntItem} = {};
   messages: HuntMessage[] = [];
   log: HuntMessage[] = [];
   score: {[item: string]: number} = {};
@@ -176,9 +176,8 @@ export class HcGainItem extends HuntConsequence {
     this.item = item;
   }
   fire(state: HuntState): HuntState {
-    const found =  state.items.filter(item => item.name === this.item);
-    if (found.length === 0) {
-      state.items.push(new HuntItem(this.item));
+    if (state.tags.indexOf(this.item) < 0) {
+      state.tags.push(this.item);
     };
     return state;
   }
@@ -194,9 +193,8 @@ export class HcGainCountable extends HuntConsequence {
     this.value = value;
   }
   fire(state: HuntState): HuntState {
-    const found =  state.items.filter(item => item.name === this.item);
-    if (found.length === 0) {
-      state.items.push(new HuntItem(this.item));
+    if (state.tags.indexOf(this.item) < 0) {
+      state.tags.push(this.item);
     };
     if (state.score[this.item]) {
       state.score[this.item] = state.score[this.item] + this.value;
@@ -215,7 +213,7 @@ export class HcDropItem extends HuntConsequence {
     this.item = item;
   }
   fire(state: HuntState): HuntState {
-    state.items =  state.items.filter(item => item.name !== this.item);
+    state.tags.splice(state.tags.indexOf(this.item));
     return state;
   }
 }
@@ -233,6 +231,22 @@ export class HcMessage extends HuntConsequence {
       msg = msg.replace('#' + item, '' + state.score[item]);
     };
     state.messages.push(new HuntMessage(msg));
+    return state;
+  }
+}
+
+export class HcOnce extends HuntConsequence {
+  code: string = 'message';
+  item: string;
+  first: HuntConsequence;
+  others: HuntConsequence
+  constructor(item: string, first: HuntConsequence, others: HuntConsequence) {
+    super();
+    this.item = item;
+    this.first = first;
+    this.others = others;
+  }
+  fire(state: HuntState): HuntState {
     return state;
   }
 }

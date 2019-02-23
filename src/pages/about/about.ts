@@ -1,7 +1,7 @@
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
-import { EventManagerProvider, HuntEvent, HuntState, HeStart, HeOneItem, HeTwoItems } from './../../providers/event-manager/event-manager';
-import { Component, Input } from '@angular/core';
+import { EventManagerProvider, HeStart, HeOneItem, HeTwoItems } from './../../providers/event-manager/event-manager';
+import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 
 @Component({
