@@ -16,14 +16,14 @@ export class SharedStateProvider {
   constructor(private storage: Storage) {
     console.log('Hello SharedStateProvider Provider');
     this.state = new HuntState();
+  }
+
+  init() {
     this.storage.get('savegame').then((state) => {
       if (state !== null) {
         this.state = state;
       }
     });
-  }
-
-  init() {
   }
 
   updateState(state: HuntState) {

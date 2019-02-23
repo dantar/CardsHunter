@@ -9,7 +9,6 @@
 <ion-content padding *ngIf="shared.state.messages.length === 0">
 
   <ion-list>
-    <ion-list-header>Tag</ion-list-header>
     <ion-item *ngFor="let tag of shared.state.tags">
       {{tag}}
       {{shared.state.score[tag]}}

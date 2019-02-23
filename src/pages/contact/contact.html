@@ -6,11 +6,10 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item *ngFor="let message of shared.state.log">
-      {{message.text}}
-    </ion-item>
-  </ion-list>
+<ion-content padding>
+
+  <p *ngFor="let message of shared.state.log">
+    {{message.text}}
+  </p>
+
 </ion-content>
