@@ -27,6 +27,13 @@ export class EventManagerProvider {
         ]),
       },
       {
+        trigger: new HtClickItem('buy'),
+        effect: new HcMany([
+          new HcGainCountable('apple', 1),
+          new HcMessage('You bought one apple! Now you have #apple apples!'),
+        ]),
+      },
+      {
         trigger: new HtClickItem('sword'),
         effect: new HcMany([
           new HcGainItem('sword'),
@@ -68,6 +75,7 @@ export class HuntState {
   items: HuntItem[] = [];
   messages: HuntMessage[] = [];
   log: HuntMessage[] = [];
+  score: {[item: string]: number} = {};
 }
 
 export class HuntMessage {
@@ -176,6 +184,29 @@ export class HcGainItem extends HuntConsequence {
   }
 }
 
+export class HcGainCountable extends HuntConsequence {
+  code: string = 'score';
+  item: string;
+  value: number;
+  constructor(item: string, value: number) {
+    super();
+    this.item = item;
+    this.value = value;
+  }
+  fire(state: HuntState): HuntState {
+    const found =  state.items.filter(item => item.name === this.item);
+    if (found.length === 0) {
+      state.items.push(new HuntItem(this.item));
+    };
+    if (state.score[this.item]) {
+      state.score[this.item] = state.score[this.item] + this.value;
+    } else {
+      state.score[this.item] = this.value;
+    };
+    return state;
+  }
+}
+
 export class HcDropItem extends HuntConsequence {
   code: string = 'drop';
   item: string;
@@ -197,7 +228,11 @@ export class HcMessage extends HuntConsequence {
     this.text = text;
   }
   fire(state: HuntState): HuntState {
-    state.messages.push(new HuntMessage(this.text));
+    var msg = this.text;
+    for (let item in state.score) {
+      msg = msg.replace('#' + item, '' + state.score[item]);
+    };
+    state.messages.push(new HuntMessage(msg));
     return state;
   }
 }
