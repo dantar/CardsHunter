@@ -131,6 +131,7 @@ export class HuntState {
   messages: HuntMessage[] = [];
   log: HuntMessage[] = [];
   score: {[item: string]: number} = {};
+  runstate: string;
 }
 
 export class HuntMessage {
@@ -219,6 +220,14 @@ export class HtNoMessages extends HuntTrigger {
 export class HuntConsequence extends TypedBase {
   type: string = 'consequence';
   fire(state: HuntState): HuntState {
+    return state;
+  }
+}
+
+export class HcEndGame extends HuntConsequence {
+  code: string = 'end';
+  fire(state: HuntState): HuntState {
+    state.runstate = 'end';
     return state;
   }
 }
