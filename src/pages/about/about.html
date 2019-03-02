@@ -1,42 +1,40 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About ({{shared.state.tags.length}})
+      Gioco tutorial
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding *ngIf="shared.state.messages.length === 0">
+<ion-content padding>
 
-  <ion-list>
-    <ion-item *ngFor="let tag of shared.state.tags">
-      {{tag}}
-      {{shared.state.score[tag]}}
-    </ion-item>
-  </ion-list>
+  <div *ngIf="shared.state.messages.length === 0">
 
-  <div *ngIf="! platform.is('cordova')">
-    <p>
-      <ion-input [(ngModel)]="nameOne"></ion-input>
-      <button ion-button color="primary" (click)="doOne($event)">One item</button>
-    </p>
-    <p>
-      <ion-input [(ngModel)]="nameTwo"></ion-input>
-      <button ion-button color="primary" (click)="doTwo($event)">Two items</button>
-    </p>
+    <div *ngIf="! platform.is('cordova')">
+      <p>
+        <ion-input [(ngModel)]="nameOne"></ion-input>
+        <button ion-button color="primary" (click)="doOne($event)">Attiva 1 carta</button>
+      </p>
+      <p>
+        <ion-input [(ngModel)]="nameTwo"></ion-input>
+        <button ion-button color="primary" (click)="doTwo($event)">Attiva 2 carte</button>
+      </p>
+    </div>
+
+    <div *ngIf="platform.is('cordova')">
+      <button ion-button color="primary" (click)="scanOne($event)">Attiva 1 carta</button>
+      <button ion-button color="primary" (click)="scanTwo($event)">Attiva 2 carte</button>
+    </div>
+
   </div>
 
-  <div *ngIf="platform.is('cordova')">
-    <button ion-button color="primary" (click)="scanOne($event)">One item</button>
-    <button ion-button color="primary" (click)="scanTwo($event)">Two item</button>
+  <div *ngIf="shared.state.messages.length > 0">
+
+    <p *ngFor="let message of shared.state.messages ">{{message.text}}</p>
+    <p>
+      <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
+    </p>
+
   </div>
 
-</ion-content>
-
-<ion-content padding *ngIf="shared.state.messages.length > 0">
-  <p>There are {{shared.state.messages.length}} messages!</p>
-  <p *ngFor="let message of shared.state.messages ">{{message.text}}</p>
-  <p>
-    <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
-  </p>
 </ion-content>

@@ -1,22 +1,28 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Impostazioni</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Card Hunter!</h2>
+
   <div *ngIf="platform.is('cordova')">
     <p>
       Codice selezionato: {{scanned}}
     </p>
     <p>
-      <button ion-button color="primary" (click)="scancode($event)">Scan</button>
+      <button ion-button color="primary" (click)="scancode($event)">Prova la lettura QR</button>
     </p>
   </div>
-  <div *ngIf="! platform.is('cordova')">
-    <p>
-      <button ion-button color="primary" (click)="reset($event)">Reset</button>
-    </p>
-  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let tag of shared.state.tags">
+      {{tag}} {{shared.state.score[tag]}}
+    </ion-item>
+  </ion-list>
+
+  <p>
+    <button ion-button color="primary" (click)="reset($event)">Ricomincia il gioco</button>
+  </p>
+
 </ion-content>
