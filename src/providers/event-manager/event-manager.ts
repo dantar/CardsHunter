@@ -102,6 +102,18 @@ export class EventManagerProvider {
         effect: new HcMessage('Il pappagallo tiene una vecchia chiave ben salda nel becco. Chissà dove l\'ha trovata.'),
       },
       {
+        trigger: new HtClickItem('chest'),
+        effect: new HcMessage('Il forziere è chiuso a chiave. Non hai speranza di aprirlo con le unghie o a morsi.'),
+      },
+      {
+        trigger: new HtClickItem('cracker'),
+        effect: new HcMessage('Assaggi un cracker. Buono! Ma non bisogna esagerare che poi viene sete.'),
+      },
+      {
+        trigger: new HtClickItem('key'),
+        effect: new HcMessage('Una chiave di metallo, lucida di bava di pappagallo sopra... urgh!'),
+      },
+      {
         trigger: new HtNoMessages(),
         effect: new HcMessage('Non accade nulla...'),
       },
