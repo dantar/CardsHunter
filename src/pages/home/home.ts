@@ -1,3 +1,4 @@
+import { NativeAudio } from '@ionic-native/native-audio';
 import { EventManagerProvider, HeStart } from './../../providers/event-manager/event-manager';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
 import { Component } from '@angular/core';
@@ -18,7 +19,6 @@ export class HomePage {
     public platform: Platform,
     private eventManager: EventManagerProvider,
     public shared: SharedStateProvider) {
-
   }
 
   scancode(event) {

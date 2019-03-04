@@ -6,12 +6,18 @@
 
 <ion-content padding>
 
+  <p *ngFor="let log of systemlog">{{log}}</p>
+
   <div *ngIf="platform.is('cordova')">
     <p>
       Codice selezionato: {{scanned}}
     </p>
     <p>
       <button ion-button color="primary" (click)="scancode($event)">Prova la lettura QR</button>
+    </p>
+    <p>
+      <button ion-button color="primary" (click)="playaudio('back')">Prova la musica S</button>
+      <button ion-button color="primary" (click)="loopaudio('pizzicato')">Prova la musica C</button>
     </p>
   </div>
 

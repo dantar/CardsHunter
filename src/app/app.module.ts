@@ -1,3 +1,4 @@
+import { NativeAudio } from '@ionic-native/native-audio';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -15,6 +16,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { EventManagerProvider } from '../providers/event-manager/event-manager';
 import { SharedStateProvider } from '../providers/shared-state/shared-state';
 import { IonicStorageModule } from '@ionic/storage';
+import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { IonicStorageModule } from '@ionic/storage';
     BarcodeScanner,
     EventManagerProvider,
     SharedStateProvider,
+    NativeAudio,
+    SoundManagerProvider,
   ]
 })
 export class AppModule {}
