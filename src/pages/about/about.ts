@@ -1,3 +1,4 @@
+import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
 import { EventManagerProvider, HeStart, HeOneItem, HeTwoItems } from './../../providers/event-manager/event-manager';
@@ -17,6 +18,7 @@ export class AboutPage {
     private eventManager: EventManagerProvider,
     private shared: SharedStateProvider,
     private scanner: BarcodeScanner,
+    private sound: SoundManagerProvider,
     public platform: Platform) {
       this.nameOne = '';
       this.nameTwo = '';
@@ -24,11 +26,19 @@ export class AboutPage {
 
   doOne(event) {
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeOneItem(this.nameOne)));
+    this.shared.state.sounds.forEach(sound => {
+      this.sound.play(sound)
+    });
+    this.shared.state.sounds = [];
     this.nameOne = '';
   }
 
   doTwo(event) {
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeTwoItems(this.nameOne, this.nameTwo)));
+    this.shared.state.sounds.forEach(sound => {
+      this.sound.play(sound)
+    });
+    this.shared.state.sounds = [];
     this.nameOne = '';
     this.nameTwo = '';
   }

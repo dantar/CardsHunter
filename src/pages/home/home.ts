@@ -1,3 +1,4 @@
+import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { EventManagerProvider, HeStart } from './../../providers/event-manager/event-manager';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
@@ -18,6 +19,7 @@ export class HomePage {
     public scanner: BarcodeScanner,
     public platform: Platform,
     private eventManager: EventManagerProvider,
+    private sound: SoundManagerProvider,
     public shared: SharedStateProvider) {
   }
 
@@ -32,6 +34,10 @@ export class HomePage {
   reset(event) {
     this.shared.resetState();
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
+    this.shared.state.sounds.forEach(sound => {
+      this.sound.play(sound)
+    });
+    this.shared.state.sounds = [];
   }
 
 }

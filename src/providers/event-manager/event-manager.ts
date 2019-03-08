@@ -1,3 +1,4 @@
+import { SoundManagerProvider } from './../sound-manager/sound-manager';
 import { Injectable } from '@angular/core';
 
 /*
@@ -12,7 +13,6 @@ export class EventManagerProvider {
   rules: HuntRules[];
 
   constructor(
-    //public http: HttpClient
     ) {
     console.log('Hello EventManagerProvider Provider');
     this.rules = [
@@ -94,6 +94,7 @@ export class EventManagerProvider {
         effect: new HcMany([
           new HcMessage('Con un "clack" la chiave apre il lucchetto dello scrigno!'),
           new HcMessage('Complimenti, hai trovato il tesoro: hai completato questo tutorial!'),
+          new HcSound('applause'),
           //new HcEndGame('key'),
         ]),
       },
@@ -141,6 +142,7 @@ export class HuntState {
   tags: string[] = [];
   items: {[item: string]: HuntItem} = {};
   messages: HuntMessage[] = [];
+  sounds: string[] = [];
   log: HuntMessage[] = [];
   score: {[item: string]: number} = {};
   runstate: string;
@@ -240,6 +242,19 @@ export class HcEndGame extends HuntConsequence {
   code: string = 'end';
   fire(state: HuntState): HuntState {
     state.runstate = 'end';
+    return state;
+  }
+}
+
+export class HcSound extends HuntConsequence {
+  code: string = 'sound';
+  sound: string;
+  constructor(sound: string) {
+    super();
+    this.sound = sound;
+  }
+  fire(state: HuntState): HuntState {
+    state.sounds.push(this.sound);
     return state;
   }
 }

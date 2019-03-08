@@ -21,6 +21,7 @@ export class SoundManagerProvider {
         this.nativeAudio.loop('pizzicato').then(
           (event) => {
             console.log('pizzicato loop ok', event);
+            this.loopMusic();
           },
           (event) => {
             console.log('pizzicato loop error', event);
@@ -28,6 +29,35 @@ export class SoundManagerProvider {
         );
       }, (event) => {
         console.log('pizzicato preload error', event);
+      }
+    );
+    this.nativeAudio.preloadSimple('applause', 'assets/mp3/applause.mp3').then(
+      (event) => {
+        console.log('applause preload ok', event);
+      }, (event) => {
+        console.log('applause preload error', event);
+      }
+    );
+  }
+
+  loopMusic() {
+    this.nativeAudio.loop('pizzicato').then(
+      (event) => {
+        console.log('pizzicato loop ok', event);
+      },
+      (event) => {
+        console.log('pizzicato loop error', event);
+      }
+    );
+  }
+
+  play(sound: string) {
+    this.nativeAudio.play(sound).then(
+      (event) => {
+        console.log(sound + ' play ok', event);
+      },
+      (event) => {
+        console.log(sound + ' play error', event);
       }
     );
   }
