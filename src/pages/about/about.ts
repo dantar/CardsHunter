@@ -2,7 +2,7 @@ import { ScanActivateOnePage } from './../scan-activate-one/scan-activate-one';
 import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
-import { EventManagerProvider, HeStart, HeOneItem, HeTwoItems, HuntEvent } from './../../providers/event-manager/event-manager';
+import { EventManagerProvider, HeOneItem, HeTwoItems, HuntEvent } from './../../providers/event-manager/event-manager';
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 

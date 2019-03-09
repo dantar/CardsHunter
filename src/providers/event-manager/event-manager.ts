@@ -1,4 +1,3 @@
-import { SoundManagerProvider } from './../sound-manager/sound-manager';
 import { Injectable } from '@angular/core';
 
 /*
@@ -43,10 +42,11 @@ export class EventManagerProvider {
       },
       {
         trigger: new HtClickItem('sword'),
-        effect: new HcMany([
-          new HcGainItem('sword'),
-          new HcMessage('You got the sword!'),
-        ]),
+        effect: new HcOnce(
+          'sword-once',
+          new HcMessage('What a shiny sword! Handle with care!'),
+          new HcMessage('Ouch! It really is sharp!')
+        ),
       },
       {
         trigger: new HtWithItem('bridge', 'orcs'),
@@ -338,7 +338,12 @@ export class HcOnce extends HuntConsequence {
     this.others = others;
   }
   fire(state: HuntState): HuntState {
-    return state;
+    if (state.tags.indexOf(this.item) < 0) {
+      state.tags.push(this.item);
+      return this.first.fire(state);
+    } else {
+      return this.others.fire(state);
+    }
   }
 }
 
