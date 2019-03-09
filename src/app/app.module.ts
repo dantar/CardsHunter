@@ -1,3 +1,4 @@
+import { ScanActivateOnePage } from './../pages/scan-activate-one/scan-activate-one';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,7 +25,8 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    ScanActivateOnePage
   ],
   imports: [
     BrowserModule,
@@ -37,7 +39,8 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    ScanActivateOnePage
   ],
   providers: [
     StatusBar,
