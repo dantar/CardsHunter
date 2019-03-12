@@ -10,22 +10,8 @@
 
   <div *ngIf="shared.state.messages.length === 0">
 
-    <div *ngIf="! platform.is('cordova')">
-      <p>
-        <ion-input [(ngModel)]="nameOne"></ion-input>
-        <button ion-button color="primary" (click)="doOne($event)">Attiva 1 carta</button>
-      </p>
-      <p>
-        <ion-input [(ngModel)]="nameTwo"></ion-input>
-        <button ion-button color="primary" (click)="doTwo($event)">Attiva 2 carte</button>
-      </p>
-    </div>
-
-    <div *ngIf="platform.is('cordova')">
-      <button ion-button color="primary" (click)="scanOne($event)">Attiva 1 carta</button>
-      <button ion-button color="primary" (click)="scanTwo($event)">Attiva 2 carte</button>
-      <button ion-button color="primary" (click)="pageScanOne($event)">Apri e attiva 1 carta</button>
-    </div>
+    <button ion-button color="primary" (click)="pageScanOne($event)">Attiva 1 carta</button>
+    <button ion-button color="primary" (click)="pageScanTwo($event)">Attiva 2 carte</button>
 
   </div>
 

@@ -1,3 +1,4 @@
+import { ScanActivateTwoPage } from './../pages/scan-activate-two/scan-activate-two';
 import { ScanActivateOnePage } from './../pages/scan-activate-one/scan-activate-one';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { NgModule, ErrorHandler } from '@angular/core';
@@ -18,6 +19,7 @@ import { EventManagerProvider } from '../providers/event-manager/event-manager';
 import { SharedStateProvider } from '../providers/shared-state/shared-state';
 import { IonicStorageModule } from '@ionic/storage';
 import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
+import { EventRunnerProvider } from '../providers/event-runner/event-runner';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
     ContactPage,
     HomePage,
     TabsPage,
-    ScanActivateOnePage
+    ScanActivateOnePage,
+    ScanActivateTwoPage,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
     ContactPage,
     HomePage,
     TabsPage,
-    ScanActivateOnePage
+    ScanActivateOnePage,
+    ScanActivateTwoPage,
   ],
   providers: [
     StatusBar,
@@ -51,6 +55,7 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
     SharedStateProvider,
     NativeAudio,
     SoundManagerProvider,
+    EventRunnerProvider,
   ]
 })
 export class AppModule {}
