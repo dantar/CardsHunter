@@ -1,3 +1,4 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ScanActivateTwoPage } from './../pages/scan-activate-two/scan-activate-two';
 import { ScanActivateOnePage } from './../pages/scan-activate-one/scan-activate-one';
 import { NativeAudio } from '@ionic-native/native-audio';
@@ -20,6 +21,7 @@ import { SharedStateProvider } from '../providers/shared-state/shared-state';
 import { IonicStorageModule } from '@ionic/storage';
 import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
 import { EventRunnerProvider } from '../providers/event-runner/event-runner';
+import { TrashMeProvider } from '../providers/trash-me/trash-me';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { EventRunnerProvider } from '../providers/event-runner/event-runner';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
+    HttpClientModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,6 +59,8 @@ import { EventRunnerProvider } from '../providers/event-runner/event-runner';
     NativeAudio,
     SoundManagerProvider,
     EventRunnerProvider,
+    TrashMeProvider,
+    HttpClient,
   ]
 })
 export class AppModule {}

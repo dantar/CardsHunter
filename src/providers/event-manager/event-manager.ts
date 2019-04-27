@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
 
 /*
   Generated class for the EventManagerProvider provider.
@@ -12,8 +14,23 @@ export class EventManagerProvider {
   rules: HuntRules[];
 
   constructor(
+    private http: HttpClient,
     ) {
     console.log('Hello EventManagerProvider Provider');
+    // this.initTutorial();
+    this.loadGame('tutorial.json');
+  }
+
+  loadGame(filename: string) {
+    this.http.get('../assets/games/' + filename).subscribe(
+      (data: HuntRules[]) => {
+        console.log('PLAIN', data);
+        this.rules = data;
+      }
+    )
+  }
+
+  initTutorial() {
     this.rules = [
       {
         trigger: new HtInitGame(),
@@ -121,11 +138,23 @@ export class EventManagerProvider {
     ];
   }
 
+  public static checks: {[id: string]: (trigger: HuntTrigger, state: HuntState, event: HuntEvent) => boolean} = {};
+  public static fires: {[id: string]: (consequence: HuntConsequence, state: HuntState, event: HuntEvent) => HuntState} = {};
+
+  public static fire(effect: HuntConsequence, state: HuntState, event: HuntEvent): HuntState {
+    console.log('FIRE', effect, state, event);
+    return EventManagerProvider.fires[effect.code](effect, state, event);
+  }
+
   handleEvent(state: HuntState, event: HuntEvent): HuntState {
     this.rules.forEach(rule => {
-      if (rule.trigger.check(state, event)) {
-        rule.effect.fire(state);
+      if (EventManagerProvider.checks[rule.trigger.code](rule.trigger, state, event)) {
+        console.log('FIRE', rule.effect, state, event);
+        EventManagerProvider.fire(rule.effect, state, event);
       }
+      // if (rule.trigger.check(state, event)) {
+      //   rule.effect.fire(state);
+      // }
     });
     return state;
   }
@@ -180,17 +209,15 @@ export class HuntItem extends TypedBase {
 export class HuntTrigger extends TypedBase {
   type: string = 'trigger';
   code: string;
-  check(state: HuntState, event: HuntEvent): boolean {
-    return false;
-  }
 }
 
 export class HtInitGame extends HuntTrigger {
   code: string = 'start';
-  check(state: HuntState, event: HuntEvent): boolean {
+  static check(trigger: HtInitGame, state: HuntState, event: HuntEvent): boolean {
     return event.code === 'start';
   }
 }
+EventManagerProvider.checks['start'] = HtInitGame.check;
 
 export class HtClickItem extends HuntTrigger {
   code: string = 'click';
@@ -199,10 +226,11 @@ export class HtClickItem extends HuntTrigger {
     super();
     this.item = item;
   }
-  check(state: HuntState, event: HuntEvent): boolean {
-    return event.code === 'one' && (<HeOneItem> event).item === this.item;
+  static check(trigger: HtClickItem, state: HuntState, event: HuntEvent): boolean {
+    return event.code === 'one' && (<HeOneItem> event).item === trigger.item;
   }
 }
+EventManagerProvider.checks['click'] = HtClickItem.check;
 
 export class HtWithItem extends HuntTrigger {
   code: string = 'with';
@@ -213,38 +241,41 @@ export class HtWithItem extends HuntTrigger {
     this.first = first;
     this.second = second;
   }
-  check(state: HuntState, event: HuntEvent): boolean {
+  static check(trigger: HtWithItem, state: HuntState, event: HeTwoItems): boolean {
     if (event.code !== 'two') {
       return false;
     }
-    const two: HeTwoItems = <HeTwoItems> event;
-    return (two.first === this.first && two.second === this.second) || (two.second === this.first && two.first === this.second);
+    return (event.first === trigger.first && event.second === trigger.second) || (event.second === trigger.first && event.first === trigger.second);
   }
 }
+EventManagerProvider.checks['with'] = HtWithItem.check;
 
 export class HtNoMessages extends HuntTrigger {
   code: string = 'nomsg';
-  check(state: HuntState, event: HuntEvent): boolean {
+  static check(trigger: HtNoMessages, state: HuntState, event: HuntEvent): boolean {
     return (state.messages.length === 0);
   }
 }
+EventManagerProvider.checks['nomsg'] = HtNoMessages.check;
 
+//
 // Hunt CONSEQUENCES
+//
 
 export class HuntConsequence extends TypedBase {
   type: string = 'consequence';
-  fire(state: HuntState): HuntState {
-    return state;
-  }
+  code: string;
 }
+
 
 export class HcEndGame extends HuntConsequence {
   code: string = 'end';
-  fire(state: HuntState): HuntState {
+  static fire(consequence: HuntConsequence, state: HuntState, event: HuntEvent): HuntState {
     state.runstate = 'end';
     return state;
   }
 }
+EventManagerProvider.fires['end'] = HcEndGame.fire;
 
 export class HcSound extends HuntConsequence {
   code: string = 'sound';
@@ -253,11 +284,12 @@ export class HcSound extends HuntConsequence {
     super();
     this.sound = sound;
   }
-  fire(state: HuntState): HuntState {
-    state.sounds.push(this.sound);
+  static fire(consequence: HcSound, state: HuntState, event: HuntEvent): HuntState {
+    state.sounds.push(consequence.sound);
     return state;
   }
 }
+EventManagerProvider.fires['sound'] = HcSound.fire;
 
 export class HcGainItem extends HuntConsequence {
   code: string = 'gain';
@@ -266,13 +298,14 @@ export class HcGainItem extends HuntConsequence {
     super();
     this.item = item;
   }
-  fire(state: HuntState): HuntState {
-    if (state.tags.indexOf(this.item) < 0) {
-      state.tags.push(this.item);
+  static fire(consequence: HcGainItem, state: HuntState, event: HuntEvent): HuntState {
+    if (state.tags.indexOf(consequence.item) < 0) {
+      state.tags.push(consequence.item);
     };
     return state;
   }
 }
+EventManagerProvider.fires['gain'] = HcGainItem.fire;
 
 export class HcGainCountable extends HuntConsequence {
   code: string = 'score';
@@ -283,18 +316,19 @@ export class HcGainCountable extends HuntConsequence {
     this.item = item;
     this.value = value;
   }
-  fire(state: HuntState): HuntState {
-    if (state.tags.indexOf(this.item) < 0) {
-      state.tags.push(this.item);
+  static fire(consequence: HcGainCountable, state: HuntState, event: HuntEvent): HuntState {
+    if (state.tags.indexOf(consequence.item) < 0) {
+      state.tags.push(consequence.item);
     };
-    if (state.score[this.item]) {
-      state.score[this.item] = state.score[this.item] + this.value;
+    if (state.score[consequence.item]) {
+      state.score[consequence.item] = state.score[consequence.item] + consequence.value;
     } else {
-      state.score[this.item] = this.value;
+      state.score[consequence.item] = consequence.value;
     };
     return state;
   }
 }
+EventManagerProvider.fires['score'] = HcGainCountable.fire;
 
 export class HcDropItem extends HuntConsequence {
   code: string = 'drop';
@@ -303,11 +337,12 @@ export class HcDropItem extends HuntConsequence {
     super();
     this.item = item;
   }
-  fire(state: HuntState): HuntState {
-    state.tags.splice(state.tags.indexOf(this.item));
+  static fire(consequence: HcDropItem, state: HuntState, event: HuntEvent): HuntState {
+    state.tags.splice(state.tags.indexOf(consequence.item));
     return state;
   }
 }
+EventManagerProvider.fires['drop'] = HcDropItem.fire;
 
 export class HcMessage extends HuntConsequence {
   code: string = 'message';
@@ -316,8 +351,8 @@ export class HcMessage extends HuntConsequence {
     super();
     this.text = text;
   }
-  fire(state: HuntState): HuntState {
-    var msg = this.text;
+  static fire(consequence: HcMessage, state: HuntState, event: HuntEvent): HuntState {
+    var msg = consequence.text;
     for (let item in state.score) {
       msg = msg.replace('#' + item, '' + state.score[item]);
     };
@@ -325,9 +360,10 @@ export class HcMessage extends HuntConsequence {
     return state;
   }
 }
+EventManagerProvider.fires['message'] = HcMessage.fire;
 
 export class HcOnce extends HuntConsequence {
-  code: string = 'message';
+  code: string = 'once';
   item: string;
   first: HuntConsequence;
   others: HuntConsequence
@@ -337,15 +373,16 @@ export class HcOnce extends HuntConsequence {
     this.first = first;
     this.others = others;
   }
-  fire(state: HuntState): HuntState {
-    if (state.tags.indexOf(this.item) < 0) {
-      state.tags.push(this.item);
-      return this.first.fire(state);
+  static fire(consequence: HcOnce, state: HuntState, event: HuntEvent): HuntState {
+    if (state.tags.indexOf(consequence.item) < 0) {
+      state.tags.push(consequence.item);
+      return EventManagerProvider.fire(consequence.first, state, event);
     } else {
-      return this.others.fire(state);
+      return EventManagerProvider.fire(consequence.others, state, event);
     }
   }
 }
+EventManagerProvider.fires['once'] = HcOnce.fire;
 
 export class HcMany extends HuntConsequence {
   code: string = 'many';
@@ -354,13 +391,15 @@ export class HcMany extends HuntConsequence {
     super();
     this.list = list;
   }
-  fire(state: HuntState): HuntState {
-    this.list.forEach(hc => {
-      hc.fire(state);
+  static fire(consequence: HcMany, state: HuntState, event: HuntEvent): HuntState {
+    let current: HuntState = state;
+    consequence.list.forEach(hc => {
+      current = EventManagerProvider.fire(hc, current, event);
     });
-    return state;
+    return current;
   }
 }
+EventManagerProvider.fires['many'] = HcMany.fire;
 
 // Hunt EVENTS
 
