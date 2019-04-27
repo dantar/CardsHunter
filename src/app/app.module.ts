@@ -21,7 +21,6 @@ import { SharedStateProvider } from '../providers/shared-state/shared-state';
 import { IonicStorageModule } from '@ionic/storage';
 import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
 import { EventRunnerProvider } from '../providers/event-runner/event-runner';
-import { TrashMeProvider } from '../providers/trash-me/trash-me';
 
 @NgModule({
   declarations: [
@@ -59,7 +58,6 @@ import { TrashMeProvider } from '../providers/trash-me/trash-me';
     NativeAudio,
     SoundManagerProvider,
     EventRunnerProvider,
-    TrashMeProvider,
     HttpClient,
   ]
 })
