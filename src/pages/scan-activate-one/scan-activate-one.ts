@@ -1,5 +1,4 @@
 import { HeOneItem } from './../../providers/event-manager/event-manager';
-import { AboutPage } from './../about/about';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';

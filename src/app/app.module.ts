@@ -7,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
+import { PlayPage } from '../pages/play/play';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -25,7 +25,7 @@ import { EventRunnerProvider } from '../providers/event-runner/event-runner';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
+    PlayPage,
     ContactPage,
     HomePage,
     TabsPage,
@@ -41,7 +41,7 @@ import { EventRunnerProvider } from '../providers/event-runner/event-runner';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
+    PlayPage,
     ContactPage,
     HomePage,
     TabsPage,

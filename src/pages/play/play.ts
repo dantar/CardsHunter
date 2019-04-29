@@ -1,15 +1,15 @@
-import { EventManagerProvider } from './../../providers/event-manager/event-manager';
-import { ScanActivateTwoPage } from './../scan-activate-two/scan-activate-two';
-import { ScanActivateOnePage } from './../scan-activate-one/scan-activate-one';
-import { SharedStateProvider } from './../../providers/shared-state/shared-state';
+import { EventManagerProvider } from '../../providers/event-manager/event-manager';
+import { ScanActivateTwoPage } from '../scan-activate-two/scan-activate-two';
+import { ScanActivateOnePage } from '../scan-activate-one/scan-activate-one';
+import { SharedStateProvider } from '../../providers/shared-state/shared-state';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-about',
-  templateUrl: 'about.html'
+  selector: 'page-play',
+  templateUrl: 'play.html'
 })
-export class AboutPage {
+export class PlayPage {
 
   constructor(
     public navCtrl: NavController,
