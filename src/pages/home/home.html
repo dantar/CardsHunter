@@ -23,8 +23,20 @@
     </ion-item>
   </ion-list>
 
+  <ion-list>
+    <ion-item *ngFor="let game of keysof(availablegames)">
+      {{game}}: {{availablegames[game]?.title}}
+      <button ion-button color="primary" (click)="playgame(game)">Gioca</button>
+    </ion-item>
+  </ion-list>
+
   <p>
     <button ion-button color="primary" (click)="reset($event)">Ricomincia il gioco</button>
+  </p>
+
+  <p>
+    <ion-input [(ngModel)]="gameurl"></ion-input>
+    <button ion-button color="primary" (click)="loadgame($event)">Carica gioco</button>
   </p>
 
 </ion-content>

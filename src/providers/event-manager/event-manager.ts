@@ -20,6 +20,10 @@ export class EventManagerProvider {
     this.loadGame('tutorial.json');
   }
 
+  setRules(newrules: HuntRules[]) {
+    this.rules = newrules;
+  };
+
   loadGame(filename: string) {
     this.http.get('../assets/games/' + filename).subscribe(
       (data: HuntRules[]) => {
@@ -52,6 +56,14 @@ export class EventManagerProvider {
   }
 
 }
+
+export class HuntGame {
+  name: string;
+  title: string;
+  rules: HuntRules[];
+}
+
+
 
 export class HuntState {
   tags: string[] = [];
