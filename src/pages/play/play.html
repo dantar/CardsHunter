@@ -10,7 +10,12 @@
 
   <div *ngIf="shared.state.messages.length === 0">
 
-    <button ion-button color="primary" (click)="pageScanOne($event)">Attiva 1 carta</button>
+    <div class="playbutton" (click)="pageScanOne($event)"><img src="assets/imgs/barcode-med.png" /></div>
+    <div class="playbutton" (click)="pageScanTwo($event)"><img src="assets/imgs/barcode-sml.png" />+<img src="assets/imgs/barcode-sml.png" /></div>
+
+    <button ion-button color="primary" (click)="pageScanOne($event)">
+      <div><img src="assets/imgs/barcode-med.png" /></div>
+    </button>
     <button ion-button color="primary" (click)="pageScanTwo($event)">Attiva 2 carte</button>
 
   </div>
