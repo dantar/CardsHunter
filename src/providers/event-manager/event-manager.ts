@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
 
 /*
   Generated class for the EventManagerProvider provider.
@@ -264,7 +263,7 @@ export class HcOnce extends HuntConsequence {
   code: string = 'once';
   item: string;
   first: HuntConsequence;
-  others: HuntConsequence
+  others: HuntConsequence;
   constructor(item: string, first: HuntConsequence, others: HuntConsequence) {
     super();
     this.item = item;
