@@ -6,8 +6,6 @@
 
 <ion-content padding>
 
-  <p *ngFor="let log of systemlog">{{log}}</p>
-
   <div *ngIf="platform.is('cordova')">
     <p>
       Codice selezionato: {{scanned}}

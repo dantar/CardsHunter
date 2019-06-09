@@ -1,3 +1,4 @@
+import { AvailableGamesProvider } from './../../providers/available-games/available-games';
 import { HttpClient } from '@angular/common/http';
 import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { EventManagerProvider, HeStart, HuntGame, HuntRules } from './../../providers/event-manager/event-manager';
@@ -16,6 +17,7 @@ export class HomePage {
   keysof = Object.keys;
   scanned: string;
   gameurl = 'http://sira2.hyperborea.com/hunter/assets/games/tutorial.json';
+  imgurl = 'http://sira2.hyperborea.com/hunter/assets/games/dice.png';
   availablegames: {[id: string]: HuntGame} = {};
 
   constructor(
@@ -26,7 +28,8 @@ export class HomePage {
     private sound: SoundManagerProvider,
     public shared: SharedStateProvider,
     private http: HttpClient,
-    private storage: Storage) {
+    private storage: Storage,
+    private games: AvailableGamesProvider) {
   }
 
   scancode(event) {
@@ -35,6 +38,12 @@ export class HomePage {
         this.scanned = barcode.text;
       }
     );
+  }
+
+  loadimg(event) {
+    this.http.get(this.imgurl, {responseType:'blob'}).subscribe((png: Blob) => {
+      this.games.storeBlob('dice.png', png);
+    })
   }
 
   loadgame(event) {

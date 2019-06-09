@@ -1,32 +1,23 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Gioco tutorial
+      Gioca
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="bg" padding >
 
-  <div *ngIf="shared.state.messages.length === 0">
-
-    <div class="playbutton" (click)="pageScanOne($event)"><img src="assets/imgs/barcode-med.png" /></div>
-    <div class="playbutton" (click)="pageScanTwo($event)"><img src="assets/imgs/barcode-sml.png" />+<img src="assets/imgs/barcode-sml.png" /></div>
-
-    <button ion-button color="primary" (click)="pageScanOne($event)">
-      <div><img src="assets/imgs/barcode-med.png" /></div>
-    </button>
-    <button ion-button color="primary" (click)="pageScanTwo($event)">Attiva 2 carte</button>
-
+  <div class="playbuttons" *ngIf="shared.state.messages.length === 0">
+    <img (click)="pageScanOne($event)" src="assets/imgs/scanone.png" />
+    <img (click)="pageScanTwo($event)" src="assets/imgs/scantwo.png" />
   </div>
 
-  <div *ngIf="shared.state.messages.length > 0">
-
+  <div class="messages" *ngIf="shared.state.messages.length > 0">
     <p *ngFor="let message of shared.state.messages" class="message">{{message.text}}</p>
     <p>
       <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
     </p>
-
   </div>
 
 </ion-content>
