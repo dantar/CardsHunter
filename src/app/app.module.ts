@@ -23,6 +23,7 @@ import { SoundManagerProvider } from '../providers/sound-manager/sound-manager';
 import { EventRunnerProvider } from '../providers/event-runner/event-runner';
 import { AvailableGamesProvider } from '../providers/available-games/available-games';
 import { File } from '@ionic-native/file/ngx';
+import { ScanQrPage } from '../pages/scan-qr/scan-qr';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { File } from '@ionic-native/file/ngx';
     TabsPage,
     ScanActivateOnePage,
     ScanActivateTwoPage,
+    ScanQrPage,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +51,7 @@ import { File } from '@ionic-native/file/ngx';
     TabsPage,
     ScanActivateOnePage,
     ScanActivateTwoPage,
+    ScanQrPage,
   ],
   providers: [
     StatusBar,

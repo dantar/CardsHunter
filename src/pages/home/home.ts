@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { EventManagerProvider, HeStart, HuntGame, HuntRules } from './../../providers/event-manager/event-manager';
 import { SharedStateProvider } from './../../providers/shared-state/shared-state';
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
+import { ScanQrPage } from '../scan-qr/scan-qr';
 
 @Component({
   selector: 'page-home',
@@ -20,6 +21,8 @@ export class HomePage {
   imgurl = 'http://sira2.hyperborea.com/hunter/assets/games/dice.png';
   availablegames: {[id: string]: HuntGame} = {};
 
+  scanqr: EventEmitter<string>;
+
   constructor(
     public navCtrl: NavController,
     public scanner: BarcodeScanner,
@@ -30,6 +33,7 @@ export class HomePage {
     private http: HttpClient,
     private storage: Storage,
     private games: AvailableGamesProvider) {
+      this.scanqr = new EventEmitter<string>();
   }
 
   scancode(event) {
@@ -52,6 +56,14 @@ export class HomePage {
       this.availablegames['tutorial'] = {name: 'tutorial', title: 'Tutorial game ('+rules.length+' rules)', rules: rules};
       this.storage.set('availablegames', this.availablegames);
     })
+  }
+
+  scangame(event) {
+    this.navCtrl.push(ScanQrPage, {'done': this.scanqr});
+    this.scanqr.subscribe((qrcode) => {
+      this.gameurl = qrcode;
+      this.loadgame(event);
+    });
   }
 
   playgame (gamename: string) {
