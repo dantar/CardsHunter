@@ -24,6 +24,7 @@ import { EventRunnerProvider } from '../providers/event-runner/event-runner';
 import { AvailableGamesProvider } from '../providers/available-games/available-games';
 import { File } from '@ionic-native/file/ngx';
 import { ScanQrPage } from '../pages/scan-qr/scan-qr';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { ScanQrPage } from '../pages/scan-qr/scan-qr';
     HttpClient,
     AvailableGamesProvider,
     File,
+    ScreenOrientation,
   ]
 })
 export class AppModule {}
