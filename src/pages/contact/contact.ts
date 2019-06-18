@@ -8,7 +8,7 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
-  constructor(public navCtrl: NavController, private shared: SharedStateProvider) {
+  constructor(public navCtrl: NavController) {
 
   }
 
