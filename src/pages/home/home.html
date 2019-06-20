@@ -21,7 +21,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="availablegames">
     <ion-item *ngFor="let game of keysof(availablegames)">
       {{game}}: {{availablegames[game]?.title}}
       <button ion-button color="primary" (click)="playgame(game)">Gioca</button>

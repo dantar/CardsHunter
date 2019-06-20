@@ -1,4 +1,3 @@
-import { AvailableGamesProvider } from './../../providers/available-games/available-games';
 import { HttpClient } from '@angular/common/http';
 import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
 import { EventManagerProvider, HeStart, HuntGame, HuntRules } from './../../providers/event-manager/event-manager';
@@ -17,9 +16,9 @@ export class HomePage {
 
   keysof = Object.keys;
   scanned: string;
-  gameurl = 'http://sira2.hyperborea.com/hunter/assets/games/tutorial.json';
+  gameurl = '';
   imgurl = 'http://sira2.hyperborea.com/hunter/assets/games/dice.png';
-  availablegames: {[id: string]: HuntGame} = {};
+  availablegames: {[id: string]: HuntGame};
 
   scanqr: EventEmitter<string>;
 
@@ -31,9 +30,13 @@ export class HomePage {
     private sound: SoundManagerProvider,
     public shared: SharedStateProvider,
     private http: HttpClient,
-    private storage: Storage,
-    private games: AvailableGamesProvider) {
+    private storage: Storage) {
       this.scanqr = new EventEmitter<string>();
+      this.storage.get('availablegames').then((availablegames: {[id: string]: HuntGame}) => {
+        this.availablegames = availablegames;
+      }).catch((exception) => {
+        this.availablegames = {};
+      });
   }
 
   scancode(event) {
@@ -44,16 +47,9 @@ export class HomePage {
     );
   }
 
-  loadimg(event) {
-    this.http.get(this.imgurl, {responseType:'blob'}).subscribe((png: Blob) => {
-      this.games.storeBlob('dice.png', png);
-    })
-  }
-
   loadgame(event) {
-    this.http.get(this.gameurl).subscribe((rules: HuntRules[]) => {
-      this.availablegames = {}; //this.storage.get('availablegames');
-      this.availablegames['tutorial'] = {name: 'tutorial', title: 'Tutorial game ('+rules.length+' rules)', rules: rules};
+    this.http.get(this.gameurl).subscribe((game: HuntGame) => {
+      this.availablegames[game.name] = game;
       this.storage.set('availablegames', this.availablegames);
     })
   }
@@ -67,7 +63,7 @@ export class HomePage {
   }
 
   playgame (gamename: string) {
-    this.eventManager.setRules(this.availablegames[gamename].rules);
+    this.eventManager.setGame(this.availablegames[gamename]);
     this.shared.resetState();
     this.shared.updateState(this.eventManager.handleEvent(this.shared.state, new HeStart()));
     this.shared.state.sounds.forEach(sound => {

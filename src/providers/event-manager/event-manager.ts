@@ -10,27 +10,20 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class EventManagerProvider {
 
+  game: HuntGame;
   rules: HuntRules[];
 
   constructor(
     private http: HttpClient,
     ) {
     console.log('Hello EventManagerProvider Provider');
-    this.loadGame('tutorial.json');
+    this.setGame({name: 'nogame', title: '', version: 1, rules: []});
   }
 
-  setRules(newrules: HuntRules[]) {
-    this.rules = newrules;
+  setGame(game: HuntGame) {
+    this.game = game;
+    this.rules = game.rules;
   };
-
-  loadGame(filename: string) {
-    this.http.get('../assets/games/' + filename).subscribe(
-      (data: HuntRules[]) => {
-        console.log('PLAIN', data);
-        this.rules = data;
-      }
-    )
-  }
 
   public static checks: {[id: string]: (trigger: HuntTrigger, state: HuntState, event: HuntEvent) => boolean} = {};
   public static fires: {[id: string]: (consequence: HuntConsequence, state: HuntState, event: HuntEvent) => HuntState} = {};
@@ -59,10 +52,9 @@ export class EventManagerProvider {
 export class HuntGame {
   name: string;
   title: string;
+  version: number;
   rules: HuntRules[];
 }
-
-
 
 export class HuntState {
   tags: string[] = [];
