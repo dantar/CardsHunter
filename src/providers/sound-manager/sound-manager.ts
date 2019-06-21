@@ -10,25 +10,29 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SoundManagerProvider {
 
+  musicVolume = 100;
+
   constructor(private nativeAudio: NativeAudio) {
     console.log('Hello SoundManagerProvider Provider');
   }
 
   init() {
-    this.nativeAudio.preloadComplex('pizzicato', 'assets/mp3/pizzicato.mp3', 1, 1, 0).then(
+    this.nativeAudio.preloadComplex('music', 'assets/mp3/quirky.mp3', 1, 1, 0).then(
       (event) => {
-        console.log('pizzicato preload ok', event);
-        this.nativeAudio.loop('pizzicato').then(
+        console.log('music preload ok', event);
+        this.onSuccessDefault(event);
+        this.nativeAudio.loop('music').then(
           (event) => {
-            console.log('pizzicato loop ok', event);
+            console.log('music loop ok', event);
+            this.onSuccessDefault(event);
             this.loopMusic();
           },
           (event) => {
-            console.log('pizzicato loop error', event);
+            console.log('music loop error', event);
           }
         );
       }, (event) => {
-        console.log('pizzicato preload error', event);
+        console.log('music preload error', event);
       }
     );
     this.nativeAudio.preloadSimple('applause', 'assets/mp3/applause.mp3').then(
@@ -40,15 +44,27 @@ export class SoundManagerProvider {
     );
   }
 
+  onSuccessDefault(event) {
+    console.log('success', event)
+  }
+
+  onErrorDefault(event) {
+    console.log('error', event)
+  }
+
   loopMusic() {
-    this.nativeAudio.loop('pizzicato').then(
+    this.nativeAudio.loop('music').then(
       (event) => {
-        console.log('pizzicato loop ok', event);
+        console.log('music loop ok', event);
       },
       (event) => {
-        console.log('pizzicato loop error', event);
+        console.log('music loop error', event);
       }
     );
+  }
+
+  updateMusicVolume() {
+    this.nativeAudio.setVolumeForComplexAsset('music', this.musicVolume / 100).then(this.onSuccessDefault, this.onErrorDefault);
   }
 
   play(sound: string) {

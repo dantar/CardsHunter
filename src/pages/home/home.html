@@ -16,6 +16,13 @@
   </div>
 
   <ion-list>
+    <ion-item>
+      <ion-label>Musica</ion-label>
+      <ion-range [(ngModel)]="sound.musicVolume" (ionChange)="sound.updateMusicVolume()"></ion-range>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
     <ion-item *ngFor="let tag of shared.state.tags">
       {{tag}} {{shared.state.score[tag]}}
     </ion-item>
