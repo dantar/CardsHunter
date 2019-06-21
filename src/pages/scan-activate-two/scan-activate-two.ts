@@ -37,11 +37,19 @@ export class ScanActivateTwoPage {
   }
 
   scanTwo() {
-    this.scanner.scan().then(
+    this.scanner.scan({
+      disableSuccessBeep: true,
+      prompt: 'scatta il primo codice',
+      resultDisplayDuration: 0,
+    }).then(
       (barcode) => {
         this.one = barcode.text;
         if (this.one != null && this.one.length > 0) {
-          this.scanner.scan().then(
+          this.scanner.scan({
+            disableSuccessBeep: true,
+            prompt: 'scatta il secondo codice',
+            resultDisplayDuration: 0,
+          }).then(
             (barcode) => {
               this.two = barcode.text;
               if (this.two != null && this.two.length > 0) {

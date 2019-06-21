@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { PlayPage } from '../play/play';
 import { ContactPage } from '../contact/contact';
 import { HomePage } from '../home/home';
+import { SoundManagerProvider } from '../../providers/sound-manager/sound-manager';
 
 @Component({
   templateUrl: 'tabs.html'

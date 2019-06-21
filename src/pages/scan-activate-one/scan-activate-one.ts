@@ -36,12 +36,18 @@ export class ScanActivateOnePage {
   }
 
   scanOne() {
-    this.scanner.scan().then(
+    this.scanner.scan({
+      disableSuccessBeep: true,
+      prompt: 'scatta il codice',
+      resultDisplayDuration: 0,
+    }).then(
       (barcode) => {
         this.one = barcode.text;
         this.doOne();
-      }
-    );
+      },
+      (error) => {
+        console.log(error);
+      });
   }
 
   doOne() {

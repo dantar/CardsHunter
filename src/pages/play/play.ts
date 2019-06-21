@@ -4,6 +4,7 @@ import { ScanActivateOnePage } from '../scan-activate-one/scan-activate-one';
 import { SharedStateProvider } from '../../providers/shared-state/shared-state';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { SoundManagerProvider } from '../../providers/sound-manager/sound-manager';
 
 @Component({
   selector: 'page-play',
@@ -15,18 +16,22 @@ export class PlayPage {
     public navCtrl: NavController,
     public shared: SharedStateProvider,
     private eventManager: EventManagerProvider,
+    private sound: SoundManagerProvider,
     ) {
   }
 
   pageScanOne(event) {
+    this.sound.play('click');
     this.navCtrl.push(ScanActivateOnePage);
   }
 
   pageScanTwo(event) {
+    this.sound.play('click');
     this.navCtrl.push(ScanActivateTwoPage);
   }
 
   readOk(event) {
+    this.sound.play('click');
     this.shared.updateState(this.eventManager.readMessages(this.shared.state));
   }
 
