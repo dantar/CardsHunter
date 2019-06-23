@@ -23,20 +23,27 @@ export class OptionsPage {
   scanqr: EventEmitter<string>;
 
   constructor(
-    public navCtrl: NavController,
-    public scanner: BarcodeScanner,
-    public platform: Platform,
-    private eventManager: EventManagerProvider,
-    private sound: SoundManagerProvider,
-    public shared: SharedStateProvider,
-    private http: HttpClient,
-    private storage: Storage) {
-      this.scanqr = new EventEmitter<string>();
-      this.storage.get('availablegames').then((availablegames: {[id: string]: HuntGame}) => {
-        this.availablegames = availablegames;
-      }).catch((exception) => {
-        this.availablegames = {};
-      });
+      public navCtrl: NavController,
+      public scanner: BarcodeScanner,
+      public platform: Platform,
+      private eventManager: EventManagerProvider,
+      private sound: SoundManagerProvider,
+      public shared: SharedStateProvider,
+      private http: HttpClient,
+      private storage: Storage) {
+    this.scanqr = new EventEmitter<string>();
+    this.storage.get('availablegames').then((availablegames: {[id: string]: HuntGame}) => {
+      this.availablegames = availablegames;
+      this.fixAvailableGames();
+    }).catch((exception) => {
+      this.fixAvailableGames();
+    });
+  }
+
+  private fixAvailableGames() {
+    if (!this.availablegames) {
+      this.availablegames = {};
+    } 
   }
 
   scancode(event) {

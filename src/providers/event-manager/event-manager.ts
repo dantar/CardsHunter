@@ -25,16 +25,25 @@ export class EventManagerProvider {
     this.rules = game.rules;
   };
 
-  public static checks: {[id: string]: (trigger: HuntTrigger, state: HuntState, event: HuntEvent) => boolean} = {};
+  public static triggers: {[id: string]: (trigger: HuntTrigger, state: HuntState, event: HuntEvent) => boolean} = {};
+  public static conditions: {[id: string]: (condition: HuntCondition, state: HuntState, event: HuntEvent) => boolean} = {};
   public static fires: {[id: string]: (consequence: HuntConsequence, state: HuntState, event: HuntEvent) => HuntState} = {};
 
   public static fire(effect: HuntConsequence, state: HuntState, event: HuntEvent): HuntState {
     return EventManagerProvider.fires[effect.code](effect, state, event);
   }
 
+  public static checkTrigger(trigger: HuntTrigger, state: HuntState, event: HuntEvent): boolean {
+    return EventManagerProvider.triggers[trigger.code](trigger, state, event);
+  }
+
+  public static checkCondition(condition: HuntCondition, state: HuntState, event: HuntEvent): boolean {
+    return EventManagerProvider.conditions[condition.code](condition, state, event);
+  }
+
   handleEvent(state: HuntState, event: HuntEvent): HuntState {
     this.rules.forEach(rule => {
-      if (EventManagerProvider.checks[rule.trigger.code](rule.trigger, state, event)) {
+      if (EventManagerProvider.checkTrigger(rule.trigger, state, event)) {
         EventManagerProvider.fire(rule.effect, state, event);
       }
     });
@@ -49,9 +58,14 @@ export class EventManagerProvider {
 
 }
 
+//
+// Hunt artifacts
+//
+
 export class HuntGame {
   name: string;
   title: string;
+
   version: number;
   rules: HuntRules[];
 }
@@ -82,6 +96,7 @@ export class TypedBase {
   type: string;
 }
 
+//
 // Hunt ITEMS
 
 export class HuntItem extends TypedBase {
@@ -106,7 +121,7 @@ export class HtInitGame extends HuntTrigger {
     return event.code === 'start';
   }
 }
-EventManagerProvider.checks['start'] = HtInitGame.check;
+EventManagerProvider.triggers['start'] = HtInitGame.check;
 
 export class HtClickItem extends HuntTrigger {
   code: string = 'click';
@@ -119,7 +134,7 @@ export class HtClickItem extends HuntTrigger {
     return event.code === 'one' && (<HeOneItem> event).item === trigger.item;
   }
 }
-EventManagerProvider.checks['click'] = HtClickItem.check;
+EventManagerProvider.triggers['click'] = HtClickItem.check;
 
 export class HtWithItem extends HuntTrigger {
   code: string = 'with';
@@ -137,7 +152,20 @@ export class HtWithItem extends HuntTrigger {
     return (event.first === trigger.first && event.second === trigger.second) || (event.second === trigger.first && event.first === trigger.second);
   }
 }
-EventManagerProvider.checks['with'] = HtWithItem.check;
+EventManagerProvider.triggers['with'] = HtWithItem.check;
+
+export class HtHaveItem extends HuntTrigger {
+  code: string = 'have';
+  item: string;
+  constructor(item: string) {
+    super();
+    this.item = item;
+  }
+  static check(trigger: HtHaveItem, state: HuntState, event: HuntEvent): boolean {
+    return state.tags.indexOf(trigger.item) >= 0;
+  }
+}
+EventManagerProvider.triggers['click'] = HtClickItem.check;
 
 export class HtNoMessages extends HuntTrigger {
   code: string = 'nomsg';
@@ -145,7 +173,29 @@ export class HtNoMessages extends HuntTrigger {
     return (state.messages.length === 0);
   }
 }
-EventManagerProvider.checks['nomsg'] = HtNoMessages.check;
+EventManagerProvider.triggers['nomsg'] = HtNoMessages.check;
+
+//
+// Hunt CONDITIONS
+//
+
+export class HuntCondition extends TypedBase {
+  type: string = 'condition';
+  code: string;
+}
+
+export class HcHaveItem extends HuntCondition {
+  code: string = 'have';
+  item: string;
+  constructor(item: string) {
+    super();
+    this.item = item;
+  }
+  static check(condition: HcHaveItem, state: HuntState, event: HuntEvent): boolean {
+    return state.tags.indexOf(condition.item) >= 0;
+  }
+}
+EventManagerProvider.conditions['have'] = HcHaveItem.check;
 
 //
 // Hunt CONSEQUENCES
@@ -156,6 +206,18 @@ export class HuntConsequence extends TypedBase {
   code: string;
 }
 
+export class HcWhenThen extends HuntConsequence {
+  code: string = 'when';
+  condition: HuntCondition;
+  effect: HuntConsequence;
+  static fire(consequence: HcWhenThen, state: HuntState, event: HuntEvent): HuntState {
+    if (EventManagerProvider.checkCondition(consequence.condition, state, event)) {
+      EventManagerProvider.fire(consequence.effect, state, event);
+    }
+    return state;
+  }
+}
+EventManagerProvider.fires['when'] = HcWhenThen.fire;
 
 export class HcEndGame extends HuntConsequence {
   code: string = 'end';
