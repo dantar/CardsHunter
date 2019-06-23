@@ -8,7 +8,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { PlayPage } from '../pages/play/play';
-import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { DiaryPage } from '../pages/diary/diary';
 
@@ -26,13 +25,14 @@ import { AvailableGamesProvider } from '../providers/available-games/available-g
 import { File } from '@ionic-native/file/ngx';
 import { ScanQrPage } from '../pages/scan-qr/scan-qr';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { OptionsPage } from '../pages/options/options';
 
 @NgModule({
   declarations: [
     MyApp,
     PlayPage,
     DiaryPage,
-    HomePage,
+    OptionsPage,
     TabsPage,
     ScanActivateOnePage,
     ScanActivateTwoPage,
@@ -49,7 +49,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
     MyApp,
     PlayPage,
     DiaryPage,
-    HomePage,
+    OptionsPage,
     TabsPage,
     ScanActivateOnePage,
     ScanActivateTwoPage,

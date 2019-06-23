@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { SoundManagerProvider } from './../../providers/sound-manager/sound-manager';
-import { EventManagerProvider, HeStart, HuntGame, HuntRules } from './../../providers/event-manager/event-manager';
-import { SharedStateProvider } from './../../providers/shared-state/shared-state';
+import { SoundManagerProvider } from '../../providers/sound-manager/sound-manager';
+import { EventManagerProvider, HeStart, HuntGame, HuntRules } from '../../providers/event-manager/event-manager';
+import { SharedStateProvider } from '../../providers/shared-state/shared-state';
 import { Component, EventEmitter } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -9,10 +9,10 @@ import { Storage } from '@ionic/storage';
 import { ScanQrPage } from '../scan-qr/scan-qr';
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-options',
+  templateUrl: 'options.html'
 })
-export class HomePage {
+export class OptionsPage {
 
   keysof = Object.keys;
   scanned: string;
