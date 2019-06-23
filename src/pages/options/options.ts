@@ -16,7 +16,7 @@ export class OptionsPage {
 
   keysof = Object.keys;
   scanned: string;
-  gameurl = '';
+  gameurl = 'assets/games/tutorial-v1.json';
   imgurl = 'http://sira2.hyperborea.com/hunter/assets/games/dice.png';
   availablegames: {[id: string]: HuntGame};
 

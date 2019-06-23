@@ -6,9 +6,9 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="bg" padding>
 
-  <p *ngFor="let message of shared.state.log">
+  <p class="message" *ngFor="let message of shared.state.log">
     {{message.text}}
   </p>
 
