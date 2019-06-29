@@ -35,4 +35,8 @@ export class PlayPage {
     this.shared.updateState(this.eventManager.readMessages(this.shared.state));
   }
 
+  messageTextParts(): string[] {
+    return this.shared.state.messages[0].text.split('\n');
+  }
+
 }

@@ -51,8 +51,7 @@ export class EventManagerProvider {
   }
 
   readMessages(state: HuntState): HuntState {
-    state.messages.forEach(message => state.log.push(message));
-    state.messages = [];
+    state.log.push(state.messages.shift());
     return state;
   }
 
@@ -82,6 +81,8 @@ export class HuntState {
 
 export class HuntMessage {
   text: string;
+  sound: string;
+  event: HuntEvent;
   constructor(text: string) {
     this.text = text;
   }
@@ -154,19 +155,6 @@ export class HtWithItem extends HuntTrigger {
 }
 EventManagerProvider.triggers['with'] = HtWithItem.check;
 
-export class HtHaveItem extends HuntTrigger {
-  code: string = 'have';
-  item: string;
-  constructor(item: string) {
-    super();
-    this.item = item;
-  }
-  static check(trigger: HtHaveItem, state: HuntState, event: HuntEvent): boolean {
-    return state.tags.indexOf(trigger.item) >= 0;
-  }
-}
-EventManagerProvider.triggers['click'] = HtClickItem.check;
-
 export class HtNoMessages extends HuntTrigger {
   code: string = 'nomsg';
   static check(trigger: HtNoMessages, state: HuntState, event: HuntEvent): boolean {
@@ -196,6 +184,77 @@ export class HcHaveItem extends HuntCondition {
   }
 }
 EventManagerProvider.conditions['have'] = HcHaveItem.check;
+
+export class HcScoreRange extends HuntCondition {
+  code: string = 'range';
+  minval: number;
+  maxval: number;
+  item : string;
+  constructor(item: string, minval: number, maxval: number) {
+    super();
+    this.item = item;
+    this.minval = minval;
+    this.maxval = maxval;
+  }
+  static check(condition: HcScoreRange, state: HuntState, event: HuntEvent): boolean {
+    let score = 0;
+    Object.keys(state.score).forEach(key => {
+      if (key === condition.item) {
+        score = state.score[key];
+      }
+    })
+    return (condition.minval === null || score >= condition.minval) && 
+      (condition.maxval === null || score <= condition.maxval) 
+  }
+}
+EventManagerProvider.conditions['range'] = HcScoreRange.check;
+
+export class HcAndOf extends HuntCondition {
+  code: string = 'and';
+  conditions: HuntCondition[];
+  constructor(conditions: HuntCondition[]) {
+    super();
+    this.conditions = conditions;
+  }
+  static check(condition: HcAndOf, state: HuntState, event: HuntEvent): boolean {
+    let result = true;
+    condition.conditions.forEach(c => {
+      result = result && EventManagerProvider.checkCondition(c, state, event);
+    });
+    return result;
+  }
+}
+EventManagerProvider.conditions['and'] = HcAndOf.check;
+
+export class HcOrOf extends HuntCondition {
+  code: string = 'or';
+  conditions: HuntCondition[];
+  constructor(conditions: HuntCondition[]) {
+    super();
+    this.conditions = conditions;
+  }
+  static check(condition: HcOrOf, state: HuntState, event: HuntEvent): boolean {
+    let result = false;
+    condition.conditions.forEach(c => {
+      result = result || EventManagerProvider.checkCondition(c, state, event);
+    });
+    return result;
+  }
+}
+EventManagerProvider.conditions['or'] = HcOrOf.check;
+
+export class HcNotOf extends HuntCondition {
+  code: string = 'not';
+  condition: HuntCondition;
+  constructor(condition: HuntCondition) {
+    super();
+    this.condition = condition;
+  }
+  static check(condition: HcNotOf, state: HuntState, event: HuntEvent): boolean {
+    return ! EventManagerProvider.checkCondition(condition.condition, state, event);
+  }
+}
+EventManagerProvider.conditions['not'] = HcNotOf.check;
 
 //
 // Hunt CONSEQUENCES
@@ -297,17 +356,24 @@ EventManagerProvider.fires['drop'] = HcDropItem.fire;
 
 export class HcMessage extends HuntConsequence {
   code: string = 'message';
-  text: string;
+  message: HuntMessage;
+  text: string; // deprecated
   constructor(text: string) {
     super();
     this.text = text;
   }
   static fire(consequence: HcMessage, state: HuntState, event: HuntEvent): HuntState {
-    var msg = consequence.text;
+    let msg: HuntMessage;
+    if (consequence.message) {
+      msg = JSON.parse(JSON.stringify(consequence.message));
+    } else {
+      msg = new HuntMessage(consequence.text);
+    }
     for (let item in state.score) {
-      msg = msg.replace('#' + item, '' + state.score[item]);
+      msg.text = msg.text.replace('#' + item, '' + state.score[item]);
     };
-    state.messages.push(new HuntMessage(msg));
+    msg.event = JSON.parse(JSON.stringify(event));
+    state.messages.push(msg);
     return state;
   }
 }

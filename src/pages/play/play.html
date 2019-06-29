@@ -14,7 +14,7 @@
   </div>
 
   <div class="messages" *ngIf="shared.state.messages.length > 0">
-    <p *ngFor="let message of shared.state.messages" class="message">{{message.text}}</p>
+    <p *ngFor="let text of messageTextParts()" class="message">{{text}}</p>
     <p>
       <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
     </p>
