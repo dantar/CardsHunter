@@ -8,7 +8,11 @@
 
 <ion-content class="bg" padding>
 
-  <p class="message" *ngFor="let message of shared.state.log">
+  <p>
+    <ion-input [(ngModel)]="filter"></ion-input>
+  </p>
+
+  <p class="message" *ngFor="let message of filterMessages()">
     {{message.text}}
   </p>
 
