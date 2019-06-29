@@ -11,16 +11,16 @@ import { ScanQrPage } from '../scan-qr/scan-qr';
 export class DiaryPage {
 
   filter: string;
+  shownMessages: HuntMessage[];
   scanqr: EventEmitter<string>;
 
   constructor(public navCtrl: NavController, public shared: SharedStateProvider) {
     this.scanqr = new EventEmitter();
+    this.shownMessages = shared.state.log;
   }
 
   filterMessages(): HuntMessage[] {
     return this.shared.state.log.filter((message: HuntMessage) => {
-      if (! this.filter || this.filter.length === 0)
-        return true;
       switch (message.event.code) {
         case 'one':
           return (message.event as HeOneItem).item === this.filter;
@@ -36,7 +36,13 @@ export class DiaryPage {
     this.navCtrl.push(ScanQrPage, {'done': this.scanqr});
     this.scanqr.subscribe((qrcode) => {
       this.filter = qrcode;
+      this.shownMessages = this.filterMessages();
     });
+  }
+
+  dropFilter() {
+    this.filter = null;
+    this.shownMessages = this.shared.state.log;
   }
 
 }

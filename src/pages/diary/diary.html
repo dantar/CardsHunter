@@ -10,10 +10,14 @@
 
   <p>
     <button ion-button color="primary" (click)="scanFilter($event)">QR</button>
+    <button ion-button color="primary" *ngIf="filter" (click)="dropFilter($event)">Cancella filtro</button>
   </p>
 
-  <p class="message" *ngFor="let message of filterMessages()">
+  <p class="message" *ngFor="let message of shownMessages">
     {{message.text}}
+  </p>
+  <p class="message" *ngIf="!shownMessages">
+    Nessun messaggio da mostrare.
   </p>
 
 </ion-content>
