@@ -9,7 +9,7 @@
 <ion-content class="bg" padding>
 
   <p>
-    <ion-input [(ngModel)]="filter"></ion-input>
+    <button ion-button color="primary" (click)="scanFilter($event)">QR</button>
   </p>
 
   <p class="message" *ngFor="let message of filterMessages()">

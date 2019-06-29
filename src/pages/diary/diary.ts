@@ -1,7 +1,8 @@
 import { SharedStateProvider } from '../../providers/shared-state/shared-state';
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { HuntMessage, HeOneItem, HeTwoItems } from '../../providers/event-manager/event-manager';
+import { ScanQrPage } from '../scan-qr/scan-qr';
 
 @Component({
   selector: 'page-diary',
@@ -10,9 +11,10 @@ import { HuntMessage, HeOneItem, HeTwoItems } from '../../providers/event-manage
 export class DiaryPage {
 
   filter: string;
+  scanqr: EventEmitter<string>;
 
   constructor(public navCtrl: NavController, public shared: SharedStateProvider) {
-
+    this.scanqr = new EventEmitter();
   }
 
   filterMessages(): HuntMessage[] {
@@ -27,6 +29,13 @@ export class DiaryPage {
         default:
           return false;
       }
+    });
+  }
+
+  scanFilter() {
+    this.navCtrl.push(ScanQrPage, {'done': this.scanqr});
+    this.scanqr.subscribe((qrcode) => {
+      this.filter = qrcode;
     });
   }
 
