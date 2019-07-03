@@ -26,6 +26,7 @@ export class EventManagerProvider {
   };
 
   public static triggers: {[id: string]: (trigger: HuntTrigger, state: HuntState, event: HuntEvent) => boolean} = {};
+  public static asks: {[id: string]: (ask: HuntAsk, state: HuntState, event: HuntEvent) => HuntState} = {};
   public static conditions: {[id: string]: (condition: HuntCondition, state: HuntState, event: HuntEvent) => boolean} = {};
   public static fires: {[id: string]: (consequence: HuntConsequence, state: HuntState, event: HuntEvent) => HuntState} = {};
 
@@ -41,12 +42,20 @@ export class EventManagerProvider {
     return EventManagerProvider.conditions[condition.code](condition, state, event);
   }
 
+  public static checkAnswer(ask: HuntAsk, state: HuntState, event: HuntEvent): HuntState {
+    return EventManagerProvider.asks[ask.code](ask, state, event);
+  }
+
   handleEvent(state: HuntState, event: HuntEvent): HuntState {
-    this.rules.forEach(rule => {
-      if (EventManagerProvider.checkTrigger(rule.trigger, state, event)) {
-        EventManagerProvider.fire(rule.effect, state, event);
-      }
-    });
+    if (state.ask) {
+      EventManagerProvider.checkAnswer(state.ask, state, event);
+    } else {
+      this.rules.forEach(rule => {
+        if (EventManagerProvider.checkTrigger(rule.trigger, state, event)) {
+          EventManagerProvider.fire(rule.effect, state, event);
+        }
+      });
+    }
     return state;
   }
 
@@ -72,6 +81,7 @@ export class HuntGame {
 export class HuntState {
   tags: string[] = [];
   items: {[item: string]: HuntItem} = {};
+  ask: HuntAsk; 
   messages: HuntMessage[] = [];
   sounds: string[] = [];
   log: HuntMessage[] = [];
@@ -354,6 +364,42 @@ export class HcDropItem extends HuntConsequence {
 }
 EventManagerProvider.fires['drop'] = HcDropItem.fire;
 
+export class HuntAsk extends TypedBase {
+  type = 'ask';
+  code: string;
+  effects: {[answer: string]: HuntConsequence};
+}
+
+export class HaCode extends HuntAsk {
+  code = 'code';
+  static answer(ask: HaCode, state: HuntState, event: HuntEvent): HuntState {
+    if (event.code === 'answer') {
+      state.ask = null;
+      let answer = (event as HeAnswer).answer;
+      if (!(answer in ask.effects)) {
+        answer = 'else';
+      } 
+      let effect = ask.effects[answer];
+      return EventManagerProvider.fires[effect.code](effect, state, event);
+    }
+  }
+}
+EventManagerProvider.asks['code'] = HaCode.answer;
+
+export class HcAskCode extends HuntConsequence {
+  code: string = 'askcode';
+  ask: HuntAsk;
+  constructor(ask: HuntAsk) {
+    super();
+    this.ask = ask;
+  }
+  static fire(consequence: HcAskCode, state: HuntState, event: HuntEvent): HuntState {
+    state.ask = JSON.parse(JSON.stringify(consequence.ask));
+    return state;
+  }
+}
+EventManagerProvider.fires['askcode'] = HcAskCode.fire;
+
 export class HcMessage extends HuntConsequence {
   code: string = 'message';
   message: HuntMessage;
@@ -446,5 +492,14 @@ export class HeTwoItems extends HuntEvent {
     super();
     this.first = first;
     this.second = second;
+  }
+}
+
+export class HeAnswer extends HuntEvent {
+  code = 'answer';
+  answer: string;
+  constructor(answer: string) {
+    super();
+    this.answer = answer;
   }
 }

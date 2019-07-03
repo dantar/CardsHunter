@@ -8,16 +8,24 @@
 
 <ion-content class="bg" padding >
 
-  <div class="playbuttons" *ngIf="shared.state.messages.length === 0">
+  <div class="playbuttons" *ngIf="shared.state.messages.length === 0 && !shared.state.ask">
     <img (click)="pageScanOne($event)" src="assets/imgs/scanone.png" />
     <img (click)="pageScanTwo($event)" src="assets/imgs/scantwo.png" />
   </div>
 
   <div class="messages" *ngIf="shared.state.messages.length > 0">
     <p *ngFor="let text of messageTextParts()" class="message">{{text}}</p>
-    <p>
+    <p *ngIf="!shared.state.ask">
       <button ion-button color="primary" (click)="readOk($event)">Ok!</button>
     </p>
   </div>
+
+  <div *ngIf="shared.state.ask">
+    <div class="askpanel">
+      <ion-input type="number" [(ngModel)]="answer"></ion-input>
+      <button ion-button color="primary" (click)="askok($event)">Ok {{answer}}!</button>
+    </div>
+  </div>
+
 
 </ion-content>
